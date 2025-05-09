@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/style.css">
+    <title>Classroom Poll System</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Classroom Poll System</h1>
+        </header>
+        
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <h2>Choose Your Role</h2>
+            
+            <div class="panel">
+                <h3>I am the instructor/host</h3>
+                <div class="form-group">
+                    <label for="host-password">Host Password:</label>
+                    <input type="password" id="host-password" placeholder="Enter host password">
+                </div>
+                <button id="login-host-btn" class="correct">Log in as Host</button>
+            </div>
+            
+            <div class="panel">
+                <h3>I am a student/participant</h3>
+                <p>Click below to join the poll as a participant. No password required.</p>
+                <button id="join-participant-btn">Join as Participant</button>
+            </div>
+        </div>
+        
+        <!-- Host Dashboard -->
+        <div id="host-dashboard" class="page">
+            <div class="alert">
+                Welcome to the host dashboard! You can create questions, control the poll, and view results here.
+            </div>
+            
+            <div class="panel">
+                <h2>Poll Management</h2>
+                <div class="controls">
+                    <button id="start-poll-btn" class="correct">Start/Reset Poll</button>
+                    <button id="edit-questions-btn">Edit Questions</button>
+                    <button id="end-poll-btn" class="warning">End Poll</button>
+                    <button id="host-logout-btn" class="danger">Log Out</button>
+                </div>
+                <div id="host-status" class="alert success" style="display: none;"></div>
+            </div>
+            
+            <div id="host-content" style="display: none;">
+                <div class="participant-count">Participants: <span id="participant-counter">0</span></div>
+                <div class="indicator">Question <span id="question-counter">1</span> of 10</div>
+                
+                <div id="host-question" class="question">
+                    <h3 id="question-text">Question text will appear here</h3>
+                    <div id="question-type-indicator" class="indicator" style="background-color: rgba(0, 184, 148, 0.1); color: var(--correct);">
+                        Question Type: <span id="question-type">Single Answer</span>
+                    </div>
+                    <div class="vote-status">Votes: <span id="vote-counter">0</span> / <span id="total-participants">0</span></div>
+                    <div class="options" id="host-options"></div>
+                </div>
+                
+                <div class="controls">
+                    <button id="show-results-btn">Show Results</button>
+                </div>
+                
+                <div id="host-results" style="display: none;">
+                    <h3>Results:</h3>
+                    <div id="results-container"></div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button id="prev-btn" disabled>Previous Question</button>
+                    <button id="next-btn">Next Question</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Edit Questions Modal -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Questions</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+                
+                <div class="question-list" id="question-list"></div>
+                
+                <button id="add-question-btn" class="correct">Add New Question</button>
+                
+                <div class="modal-actions">
+                    <button id="save-questions-btn" class="correct">Save All Changes</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question Editor Modal -->
+        <div id="question-editor-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="editor-title">Add New Question</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-question-text">Question:</label>
+                    <textarea id="edit-question-text" placeholder="Enter your question here"></textarea>
+                </div>
+                
+                <div class="form-group question-type-selector">
+                    <label for="question-type-select">Question Type:</label>
+                    <select id="question-type-select">
+                        <option value="single">Single Correct Answer</option>
+                        <option value="multiple">Multiple Correct Answers</option>
+                    </select>
+                </div>
+                
+                <div id="edit-options-container">
+                    <label>Options:</label>
+                    <!-- Options will be added here -->
+                </div>
+                
+                <button id="add-option-btn">Add Option</button>
+                
+                <div class="modal-actions">
+                    <button id="cancel-edit-btn">Cancel</button>
+                    <button id="save-question-btn" class="correct">Save Question</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Participant View -->
+        <div id="participant-page" class="page">
+            <div id="waiting-connection" class="waiting">
+                <h3>Connecting to poll...</h3>
+                <div class="waiting-animation"></div>
+            </div>
+            
+            <div id="waiting-start" class="waiting" style="display: none;">
+                <h3>Waiting for the instructor to start the poll...</h3>
+                <div class="waiting-animation"></div>
+                <button id="participant-logout-btn" class="danger">Exit Poll</button>
+            </div>
+            
+            <div id="participant-active" style="display: none;">
+                <div class="indicator">Question <span id="participant-question-counter">1</span> of 10</div>
+                
+                <div id="participant-question" class="question">
+                    <h3 id="participant-question-text">Question text will appear here</h3>
+                    <div id="participant-type-indicator" class="indicator" style="background-color: rgba(0, 184, 148, 0.1); color: var(--correct);">
+                        Question Type: <span id="participant-question-type">Single Answer</span>
+                    </div>
+                    <div class="options" id="participant-options"></div>
+                </div>
+                
+                <div id="multi-answer-submit" style="display: none; margin-top: 15px; text-align: center;">
+                    <button id="submit-answers-btn" class="correct">Submit Answers</button>
+                </div>
+                
+                <div id="waiting-results" class="waiting" style="display: none;">
+                    <h3>Thank you for your answer!</h3>
+                    <p>Waiting for the instructor to show results...</p>
+                    <div class="waiting-animation"></div>
+                </div>
+                
+                <div id="participant-results" style="display: none;">
+                    <h3>Results:</h3>
+                    <div id="participant-results-container"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Thank You Page -->
+        <div id="thank-you-page" class="page">
+            <div class="thank-you-page">
+                <div class="thank-you-icon">✓</div>
+                <h2 class="thank-you-message">Thank You for Participating!</h2>
+                <p class="thank-you-sub">Your responses have been recorded.</p>
+                <button id="close-poll-btn" class="correct">Close</button>
+            </div>
+        </div>
+    </div>
+    <script src="/src/ccl.js"></script>
+</body>
+</html>
